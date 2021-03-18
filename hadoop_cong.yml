@@ -1,0 +1,70 @@
+- hosts: Master_node
+  vars:
+          dvd_direc: "/dvd"
+          ip: "{{ ansible_facts['default_ipv4']['address']  }}"
+          node: "name"
+  tasks:
+          - name: "installing java" 
+            shell: "rpm -i /root/jdk-8u171-linux-x64.rpm --force"
+
+          - name: "installing hadoop"
+            shell: "rpm -i /root/hadoop-1.2.1-1.x86_64.rpm --force"
+
+          - name: "confguration of hdfs-site.xml file"
+            template:
+                  dest: "/etc/hadoop/hdfs-site.xml"
+                  src: "hdfs-site.xml"
+
+          - name: "configuration of core-site.xml file"
+            template:
+                  dest: "/etc/hadoop/core-site.xml"
+                  src: "core-site.xml"
+
+          - name: "creating directory"
+            file:
+                  state: directory
+                  path: "/nn"
+
+          - name: "Formatting Namenode"
+            shell: "echo Y | hadoop namenode -format"
+
+          - name: "starting namenode"
+            shell: "hadoop-daemon.sh start namenode"
+
+            #- name: "stopping namenode"
+            # shell: "hadoop-daemon.sh stop namenode"
+
+- hosts: Slave_node
+  vars:
+          dvd_direc: "/dvd"
+          ip: "{{ ansible_facts['default_ipv4']['address']  }}"
+          node: "data"
+  tasks:
+          - name: "installing java"
+            shell: "rpm -i /root/jdk-8u171-linux-x64.rpm --force"
+
+          - name: "installing hadoop"
+            shell: "rpm -i /root/hadoop-1.2.1-1.x86_64.rpm --force"
+
+          - name: "confguration of hdfs-site.xml file"
+            template:
+                  dest: "/etc/hadoop/hdfs-site.xml"
+                  src: "hdfs-site.xml"
+
+          - name: "configuration of core-site.xml file"
+            template:
+                  dest: "/etc/hadoop/core-site.xml"
+                  src: "core-site.xml"
+
+          - name: "creating directory"
+            file:
+                  state: directory
+                  path: "/dn"
+
+          - name: "starting datanode"
+            shell: "hadoop-daemon.sh start datanode"
+
+            #- name: "stopping namenode"
+            #  shell: "hadoop-daemon.sh stop namenode"
+
+            
