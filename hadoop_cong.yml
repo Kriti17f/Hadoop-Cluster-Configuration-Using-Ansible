@@ -35,9 +35,12 @@
             # shell: "hadoop-daemon.sh stop namenode"
 
 - hosts: Slave_node
+  vars_prompt:
+          - name: ip
+            prompt: "Enter the ip address of Masternode/Namenode: "
+            private: no
   vars:
           dvd_direc: "/dvd"
-          ip: "{{ ansible_facts['default_ipv4']['address']  }}"
           node: "data"
   tasks:
           - name: "installing java"
